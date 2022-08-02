@@ -8,10 +8,32 @@ class App extends React.Component {
   constructor(props) {
     super (props);
     this.state = {
-      videos: exampleVideoData,
-      currentVideo: exampleVideoData[0]
+      videos: [],
+      currentVideo: exampleVideoData[0],
+      query: ''
     };
-    this.onTitleClick = this.onTitleClick.bind(this);
+  }
+
+  componentDidMount() {
+    searchYouTube('', (data)=>{
+      this.setState({
+        videos: data,
+        currentVideo: data[0]
+      });
+    });
+  }
+
+  getQuery (event) {
+    this.setState({ query: event.target.value });
+    searchYouTube(this.state.query, (data)=>{
+      this.setState({ videos: data });
+    });
+  }
+
+  onSubmit (event) {
+    searchYouTube(this.state.query, (data)=>{
+      this.setState({ videos: data });
+    });
   }
 
   onTitleClick(event) {
@@ -27,7 +49,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search />
+            <Search getQuery={this.getQuery.bind(this)} onSubmit={this.onSubmit.bind(this)}/>
             {/*<div><h5><em>search</em> view goes here</h5></div>*/}
           </div>
         </nav>
@@ -37,7 +59,7 @@ class App extends React.Component {
             {/*<div><h5><em>videoPlayer</em> view goes here</h5></div>*/}
           </div>
           <div className="col-md-5">
-            <VideoList videos={this.state.videos} onTitleClick={this.onTitleClick}/>
+            <VideoList videos={this.state.videos} onTitleClick={this.onTitleClick.bind(this)}/>
             {/*<div><h5><em>videoList</em> view goes here</h5></div>*/}
           </div>
         </div>
