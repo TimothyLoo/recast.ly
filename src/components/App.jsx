@@ -23,8 +23,17 @@ class App extends React.Component {
     });
   }
 
-  getQuery (event) {
-    this.setState({ query: event.target.value });
+
+  // debounce(func, timeout = 500) {
+  //   let timer;
+  //   return (...args) => {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  //   };
+  // }
+
+  getQuery (q) {
+    this.setState({ query: q });
     searchYouTube(this.state.query, (data)=>{
       this.setState({ videos: data });
     });
@@ -36,12 +45,8 @@ class App extends React.Component {
     });
   }
 
-  onTitleClick(event) {
-    for (let video of this.state.videos) {
-      if (video.id.videoId === event.target.id) {
-        this.setState({ currentVideo: video });
-      }
-    }
+  onTitleClick(video) {
+    this.setState({ currentVideo: video });
   }
 
   render() {
